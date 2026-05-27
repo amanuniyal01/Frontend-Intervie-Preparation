@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react"
 import ProductCard from "./ProductCard";
+import Debugging from "./Debugging";
 
 
 const PAGE_SIZE = 10;
@@ -53,7 +54,7 @@ const Pagination = () => {
 
 
             </div>
-
+            <Debugging />
         </div>
     )
 };
