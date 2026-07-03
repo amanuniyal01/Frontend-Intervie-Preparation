@@ -1,11 +1,8 @@
-const ProductCard= ({image,title})=>{
+const ProductCard = ({ image, title }) => {
   return (
     <div className="product">
-      <img  src={image} alt={title} />
+      <img src={image} alt={title} />
       <p>{title}</p>
-     
-   
-    
     </div>
   )
 }

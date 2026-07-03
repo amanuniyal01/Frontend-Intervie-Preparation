@@ -2,18 +2,19 @@ import { useState, useEffect } from "react"
 import ProductCard from "./ProductCard";
 import Debugging from "./Debugging";
 
-
 const PAGE_SIZE = 10;
-
-
 const Pagination = () => {
     const [products, setProducts] = useState([])
     const [currentPage, setCurrentPage] = useState(0)
-    const fetchData = async () => {
-        const data = await fetch("https://dummyjson.com/products?limit=200")
-        const json = await data.json();
-        setProducts(json.products)
+    const [search, setSearch] = useState('')
+    const fetchData = async (search) => {
+        const url = search
+            ? `https://dummyjson.com/products/search?q=${search}`
+            : `https://dummyjson.com/products?limit=200`;
 
+        const data = await fetch(url);
+        const json = await data.json();
+        setProducts(json.products);
     }
     const handlePagination = (n) => {
         setCurrentPage(n)
@@ -29,10 +30,17 @@ const Pagination = () => {
     const noOfPages = Math.ceil(totalProducts / PAGE_SIZE);
     const start = currentPage * PAGE_SIZE
     const end = start + PAGE_SIZE
+    const handleSearch = (value) => {
+        setSearch(value)
+        setCurrentPage(0)
+    }
     useEffect(() => {
-        fetchData()
+        const timer = setTimeout(() => {
+            fetchData(search)
+        }, 500)
+        return () => clearTimeout(timer)
 
-    }, [])
+    }, [search])
 
     return !products.length ? <h2>No products found</h2> : (
         <div >
@@ -47,14 +55,15 @@ const Pagination = () => {
                     disabled={currentPage === noOfPages - 1}
                     onClick={() => handleForward()}>➡️</button>
             </div>
+            <div className="input-container">
+                <input placeholder="Enter the product you want to search..."
+                    value={search}
+                    onChange={(e) => handleSearch(e.target.value)} />
+            </div>
 
             <div className="product-container">
                 {products.slice(start, end).map((p) => <ProductCard image={p.thumbnail} title={p.title} />)}
-
-
-
             </div>
-            <Debugging />
         </div>
     )
 };
