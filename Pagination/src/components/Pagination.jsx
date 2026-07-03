@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react"
 import ProductCard from "./ProductCard";
 import Debugging from "./Debugging";
+import { useNavigate } from "react-router-dom";
 
 const PAGE_SIZE = 10;
 const Pagination = () => {
     const [products, setProducts] = useState([])
     const [currentPage, setCurrentPage] = useState(0)
     const [search, setSearch] = useState('')
+    const navigate = useNavigate()
     const fetchData = async (search) => {
         const url = search
             ? `https://dummyjson.com/products/search?q=${search}`
@@ -62,7 +64,13 @@ const Pagination = () => {
             </div>
 
             <div className="product-container">
-                {products.slice(start, end).map((p) => <ProductCard image={p.thumbnail} title={p.title} />)}
+                {products.slice(start, end).map((p) => <div onClick={() => navigate(`/product/${p.id}`)}>
+                    <ProductCard
+                        key={p.id}
+                        image={p.thumbnail}
+                        title={p.title}
+                    />
+                </div>)}
             </div>
         </div>
     )
